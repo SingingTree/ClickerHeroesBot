@@ -37,7 +37,7 @@ def get_game_area_rect(window_handle):
     game_area_on_screen = (client_area_on_screen[0] + horizontal_letterbox_width,
                            client_area_on_screen[1] + vertical_letterbox_height,
                            client_area_on_screen[2] - horizontal_letterbox_width,
-                           client_area_on_screen[3] - horizontal_letterbox_width)
+                           client_area_on_screen[3] - vertical_letterbox_height)
 
     return game_area_on_screen
 

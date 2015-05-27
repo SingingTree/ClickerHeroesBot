@@ -14,16 +14,29 @@ stop_code = 2
 quit_code = 3
 
 
-def bot_loop():
+def debug_check_mouse_locations():
+    clicker_heroes_handle = (clickerhero.get_clicker_heroes_window_handle())
+    if clicker_heroes_handle == 0:
+        print("Could not obtain handle for clicker hero window, exiting")
+        return False
+    game_area = clickerhero.get_game_area_rect(clicker_heroes_handle)
+    monster_x, monster_y = clickerhero.get_monster_click_pos(game_area)
+    clickerhero.move_cursor(int(monster_x), int(monster_y))
+
+def spam_monster_clicks(game_area):
+    monster_x, monster_y = clickerhero.get_monster_click_pos(game_area)
+    clickerhero.move_cursor(int(monster_x), int(monster_y))
+    clickerhero.spam_clicks_with_delay(50, 0.02)
+
+
+def process_bot():
     clicker_heroes_handle = (clickerhero.get_clicker_heroes_window_handle())
     if clicker_heroes_handle == 0:
         print("Could not obtain handle for clicker hero window, exiting")
         return False
     _, _, (x, y) = win32gui.GetCursorInfo()
     game_area = clickerhero.get_game_area_rect(clicker_heroes_handle)
-    monster_x, monster_y = clickerhero.get_monster_click_pos(game_area)
-    clickerhero.move_cursor(int(monster_x), int(monster_y))
-    clickerhero.spam_num_clicks(30, 0.02)
+    spam_monster_clicks(game_area)
     # print(clickerhero.get_monster_click_pos(game_area))
     # print("Cursor: " + str(x) + " " + str(y))
     # print("Window rect: " + str(win32gui.GetWindowRect(clicker_heroes_handle)))
@@ -51,6 +64,13 @@ def check_for_input():
 
 
 def main():
+    debug = False
+    # debug mode only code
+    if debug:
+        debug_check_mouse_locations()
+        return
+    # debug mode only code
+    program_start_time = time.clock()
     running = True
     paused = True
     win32gui.RegisterHotKey(None, start_hot_key_id, 0, win32con.VK_F6)
@@ -58,8 +78,9 @@ def main():
     win32gui.RegisterHotKey(None, quit_hot_key_id, 0, win32con.VK_F8)
     try:
         while running:
+            main_loop_start_clock = time.clock()
             if not paused:
-                bot_loop_success = bot_loop()
+                bot_loop_success = process_bot()
                 if not bot_loop_success:
                     return
             input_result = check_for_input()
@@ -69,7 +90,7 @@ def main():
                 paused = True
             elif input_result == quit_code:
                 return
-            time.sleep(1)
+            main_loop_end_clock = time.clock()
     finally:
         ctypes.windll.user32.UnregisterHotKey(None, start_hot_key_id)  # win32gui doesn't expose this
         ctypes.windll.user32.UnregisterHotKey(None, stop_hot_key_id)  # win32gui doesn't expose this
