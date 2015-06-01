@@ -20,11 +20,14 @@ def debug_check_mouse_locations():
         print("Could not obtain handle for clicker hero window, exiting")
         return False
     game_area = clickerhero.get_game_area_rect(clicker_heroes_handle)
-    monster_x, monster_y = clickerhero.get_monster_click_pos(game_area)
-    clickerhero.move_cursor(int(monster_x), int(monster_y))
+    print(str(game_area))
+    print(win32gui.GetCursorPos())
+    x, y = clickerhero.get_clickstorm_pos(game_area)
+    clickerhero.move_cursor(int(x), int(y))
+
 
 def spam_monster_clicks(game_area):
-    monster_x, monster_y = clickerhero.get_monster_click_pos(game_area)
+    monster_x, monster_y = clickerhero.get_monster_pos(game_area)
     clickerhero.move_cursor(int(monster_x), int(monster_y))
     clickerhero.spam_clicks_with_delay(50, 0.02)
 
@@ -64,7 +67,7 @@ def check_for_input():
 
 
 def main():
-    debug = False
+    debug = True
     # debug mode only code
     if debug:
         debug_check_mouse_locations()

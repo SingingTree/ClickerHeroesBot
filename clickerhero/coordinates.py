@@ -42,7 +42,19 @@ def get_game_area_rect(window_handle):
     return game_area_on_screen
 
 
-def get_monster_click_pos(game_area_rect):
+def get_clickstorm_pos(game_area_rect):
+    clickstorm_witdh_ratio = 0.535
+    clickstorm_height_ratio = 0.267
+    game_width = game_area_rect[2] - game_area_rect[0]
+    game_height = game_area_rect[3] - game_area_rect[1]
+
+    monster_x = game_width * clickstorm_witdh_ratio + game_area_rect[0]
+    monster_y = game_height * clickstorm_height_ratio + game_area_rect[1]
+
+    return monster_x, monster_y
+
+
+def get_monster_pos(game_area_rect):
     monster_witdh_ratio = 0.75
     monster_height_ratio = 0.55
     game_width = game_area_rect[2] - game_area_rect[0]
