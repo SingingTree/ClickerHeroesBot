@@ -13,7 +13,7 @@ def get_game_area_rect(window_handle):
     client_height = client_bottom
     header_height = window_height - client_height - border_width
 
-    client_area_on_screen = (window_left + border_width, window_top + header_height,
+    client_rect_on_screen = (window_left + border_width, window_top + header_height,
                              window_right - border_width, window_bottom - border_width)
 
     # 16 : 9 ratio is used by the game, and will be letter-boxed to maintain it
@@ -34,12 +34,12 @@ def get_game_area_rect(window_handle):
     horizontal_letterbox_width = (client_width - game_width) / 2
     vertical_letterbox_height = (client_height - game_height) / 2
 
-    game_area_on_screen = (client_area_on_screen[0] + horizontal_letterbox_width,
-                           client_area_on_screen[1] + vertical_letterbox_height,
-                           client_area_on_screen[2] - horizontal_letterbox_width,
-                           client_area_on_screen[3] - vertical_letterbox_height)
+    game_screen_coords_rect = (client_rect_on_screen[0] + horizontal_letterbox_width,
+                               client_rect_on_screen[1] + vertical_letterbox_height,
+                               client_rect_on_screen[2] - horizontal_letterbox_width,
+                               client_rect_on_screen[3] - vertical_letterbox_height)
 
-    return game_area_on_screen
+    return game_screen_coords_rect
 
 
 def get_clickstorm_pos(game_area_rect):
