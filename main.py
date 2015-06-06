@@ -2,32 +2,18 @@ import ctypes
 import win32gui, win32con
 import time
 import clickerhero
-import sys
+import debug
 
-debug = True
+debug_mode = True
 
 start_hot_key_id = 1
 stop_hot_key_id = 2
 quit_hot_key_id = 3
 
-debug_print_mouse_coord_check_hot_key_id = 101
-debug_print_mouse_pos_hot_key_id = 102
-
 hold_steady_code = 0
 start_code = 1
 stop_code = 2
 quit_code = 3
-
-
-def debug_check_mouse_locations():
-    clicker_heroes_handle = (clickerhero.get_clicker_heroes_window_handle())
-    if clicker_heroes_handle == 0:
-        print("Could not obtain handle for clicker hero window, exiting")
-        sys.exit()
-    game_area = clickerhero.get_game_area_rect(clicker_heroes_handle)
-    x, y = clickerhero.get_clickstorm_pos(game_area)
-    clickerhero.move_cursor(int(x), int(y))
-
 
 def spam_monster_clicks(game_area):
     monster_x, monster_y = clickerhero.get_monster_pos(game_area)
@@ -64,11 +50,8 @@ def check_for_input():
                 print("Got F8, quitting")
                 return quit_code
             else:
-                if debug:
-                    if msg[2] == debug_print_mouse_pos_hot_key_id:
-                        print(win32gui.GetCursorPos())
-                    if msg[2] == debug_print_mouse_coord_check_hot_key_id:
-                        debug_check_mouse_locations()
+                if debug_mode:
+                    debug.handle_msg(msg)
         win32gui.TranslateMessage(msg)
         win32gui.DispatchMessage(msg)
         status, msg = win32gui.PeekMessage(None, 0, 0, win32con.PM_REMOVE)
@@ -83,9 +66,8 @@ def main():
     win32gui.RegisterHotKey(None, stop_hot_key_id, 0, win32con.VK_F7)
     win32gui.RegisterHotKey(None, quit_hot_key_id, 0, win32con.VK_F8)
     # Register debug hotkeys
-    if debug:
-        win32gui.RegisterHotKey(None, debug_print_mouse_coord_check_hot_key_id, 0, 0x4D) # M key
-        win32gui.RegisterHotKey(None, debug_print_mouse_pos_hot_key_id, 0, 0x50) # P key
+    if debug_mode:
+        debug.setup_debug_hotkeys()
     try:
         while running:
             main_loop_start_clock = time.clock()
@@ -100,8 +82,6 @@ def main():
                 paused = True
             elif input_result == quit_code:
                 return
-            if debug:
-                debug
             main_loop_end_clock = time.clock()
     finally:
         ctypes.windll.user32.UnregisterHotKey(None, start_hot_key_id)  # win32gui doesn't expose this
