@@ -1,7 +1,7 @@
 import clickerhero
 import sys
 
-def check_mouse_locations():
+def check_clickstorm_location():
     clicker_heroes_handle = (clickerhero.get_clicker_heroes_window_handle())
     if clicker_heroes_handle == 0:
         print("Could not obtain handle for clicker hero window, exiting")
