@@ -1,5 +1,6 @@
 import ctypes
-import win32gui, win32con
+import win32gui
+import win32con
 import time
 import clickerhero
 import debug
@@ -15,8 +16,9 @@ start_code = 1
 stop_code = 2
 quit_code = 3
 
-def spam_monster_clicks(game_area):
-    monster_x, monster_y = clickerhero.get_monster_pos(game_area)
+
+def spam_monster_clicks(game_area_rect):
+    monster_x, monster_y = clickerhero.get_monster_pos(game_area_rect)
     clickerhero.move_cursor(int(monster_x), int(monster_y))
     clickerhero.spam_clicks_with_delay(50, 0.02)
 
@@ -27,9 +29,9 @@ def process_bot():
         print("Could not obtain handle for clicker hero window, exiting")
         return False
     _, _, (x, y) = win32gui.GetCursorInfo()
-    game_area = clickerhero.get_game_area_rect(clicker_heroes_handle)
-    spam_monster_clicks(game_area)
-    # print(clickerhero.get_monster_click_pos(game_area))
+    game_area_rect = clickerhero.get_game_area_rect(clicker_heroes_handle)
+    spam_monster_clicks(game_area_rect)
+    # print(clickerhero.get_monster_click_pos(game_area_rect))
     # print("Cursor: " + str(x) + " " + str(y))
     # print("Window rect: " + str(win32gui.GetWindowRect(clicker_heroes_handle)))
     # print("Game areas: " + str(clickerhero.get_active_game_area(clicker_heroes_handle)))
