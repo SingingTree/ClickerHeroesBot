@@ -1,17 +1,30 @@
+import clickerhero
 import cv2
-import numpy as np
+import numpy
+import pyscreenshot
 from matplotlib import pyplot as plt
+import time
 
 
-def capture_screenshot():
-    return None
+def capture_screen_shot_of_region((left, top, right, bottom)):
+    im = pyscreenshot.grab((left, top, right, bottom))
+    return im
 
+
+def convert_screen_shot_to_numpy_array(screen_shot):
+    im = screen_shot.convert("RGB")
+    return numpy.array(im)
 
 def locate_fish_in_screen_shot(screen_shot):
     screen_shot2 = screen_shot.copy()
-    template = cv2.imread('img/Fish.png')
+    screen_shot_height, _, _ = screen_shot.shape
 
-    template_width, template_height, template_depth  = template.shape
+    # Fish template is for 1920 * 1029 res, need to find the scale it should be sized to
+    template_scale = screen_shot_height / 1029.0
+
+    template = cv2.imread('img/Fish.png')
+    template = cv2.resize(template, (0, 0), fx=template_scale, fy=template_scale)  # scale template
+    template_height, template_width, _  = template.shape
 
     # All the 6 methods for comparison in a list
     methods = ['cv2.TM_CCOEFF', 'cv2.TM_CCOEFF_NORMED', 'cv2.TM_CCORR',
@@ -22,7 +35,7 @@ def locate_fish_in_screen_shot(screen_shot):
         method = eval(meth)
 
         # Apply template Matching
-        res = cv2.matchTemplate(screen_shot,template,method)
+        res = cv2.matchTemplate(screen_shot, template, method)
         min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
 
         # If the method is TM_SQDIFF or TM_SQDIFF_NORMED, take minimum
@@ -42,5 +55,9 @@ def locate_fish_in_screen_shot(screen_shot):
 
         plt.show()
 
-img = cv2.imread('img/FishOnScreen.png')
-locate_fish_in_screen_shot(img)
+time.sleep(1)
+img = cv2.imread('img/FishOnScreen2.png')
+im = capture_screen_shot_of_region(clickerhero.get_game_area_rect(clickerhero.get_clicker_heroes_window_handle()))
+im = convert_screen_shot_to_numpy_array(im)
+im = cv2.cvtColor(im, cv2.COLOR_RGB2BGR)
+locate_fish_in_screen_shot(im)
