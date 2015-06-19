@@ -18,10 +18,14 @@ quit_code = 3
 
 
 def spam_monster_clicks(game_area_rect):
-    monster_x, monster_y = clickerhero.get_monster_pos(game_area_rect)
+    monster_x, monster_y = clickerhero.get_monster_screen_coords(game_area_rect)
     clickerhero.move_cursor(int(monster_x), int(monster_y))
-    clickerhero.spam_clicks_with_delay(50, 0.02)
+    clickerhero.spam_clicks_with_delay(20, 0.02)
 
+
+def spam_monster_clicks_background(window_handle, game_area_rect):
+    monster_x, monster_y = clickerhero.get_monter_client_coords(game_area_rect)
+    clickerhero.spam_click_messages_with_delay(window_handle, 20, 0.02, monster_x, monster_y)
 
 def process_bot():
     clicker_heroes_handle = (clickerhero.get_clicker_heroes_window_handle())
@@ -31,6 +35,7 @@ def process_bot():
     _, _, (x, y) = win32gui.GetCursorInfo()
     game_area_rect = clickerhero.get_game_area_rect(clicker_heroes_handle)
     spam_monster_clicks(game_area_rect)
+    #spam_monster_clicks_background(clicker_heroes_handle, game_area_rect)
     # print(clickerhero.get_monster_click_pos(game_area_rect))
     # print("Cursor: " + str(x) + " " + str(y))
     # print("Window rect: " + str(win32gui.GetWindowRect(clicker_heroes_handle)))

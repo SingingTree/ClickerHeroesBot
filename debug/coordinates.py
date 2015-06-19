@@ -9,7 +9,7 @@ def check_clickstorm_location():
         print("Could not obtain handle for clicker hero window, exiting")
         sys.exit()
     game_area_rect = clickerhero.get_game_area_rect(clicker_heroes_handle)
-    x, y = clickerhero.get_clickstorm_pos(game_area_rect)
+    x, y = clickerhero.get_clickstorm_screen_coords(game_area_rect)
     clickerhero.move_cursor(int(x), int(y))
 
 

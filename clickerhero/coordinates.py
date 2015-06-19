@@ -42,26 +42,38 @@ def get_game_area_rect(window_handle):
     return game_screen_coords_rect
 
 
-def get_clickstorm_pos(game_area_rect):
+def get_clickstorm_screen_coords(game_area_rect):
+    client_x, client_y = get_clickstorm_client_coords(game_area_rect)
+    clickstorm_x, clickstorm_y = (client_x + game_area_rect[0], client_y + game_area_rect[1])
+    return clickstorm_x, clickstorm_y
+
+
+def get_clickstorm_client_coords(game_area_rect):
     clickstorm_witdh_ratio = 0.535
     clickstorm_height_ratio = 0.267
     game_width = game_area_rect[2] - game_area_rect[0]
     game_height = game_area_rect[3] - game_area_rect[1]
 
-    monster_x = game_width * clickstorm_witdh_ratio + game_area_rect[0]
-    monster_y = game_height * clickstorm_height_ratio + game_area_rect[1]
+    clickstorm_x = game_width * clickstorm_witdh_ratio
+    clickstorm_y = game_height * clickstorm_height_ratio
 
+    return clickstorm_x, clickstorm_y
+
+
+def get_monster_screen_coords(game_area_rect):
+    client_x, client_y = get_monter_client_coords(game_area_rect)
+    monster_x, monster_y = (client_x + game_area_rect[0], client_y + game_area_rect[1])
     return monster_x, monster_y
 
 
-def get_monster_pos(game_area_rect):
+def get_monter_client_coords(game_area_rect):
     monster_witdh_ratio = 0.75
     monster_height_ratio = 0.55
     game_width = game_area_rect[2] - game_area_rect[0]
     game_height = game_area_rect[3] - game_area_rect[1]
 
-    monster_x = game_width * monster_witdh_ratio + game_area_rect[0]
-    monster_y = game_height * monster_height_ratio + game_area_rect[1]
+    monster_x = game_width * monster_witdh_ratio
+    monster_y = game_height * monster_height_ratio
 
     return monster_x, monster_y
 
